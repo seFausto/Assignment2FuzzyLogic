@@ -26,20 +26,33 @@ public class FuzzyLogic {
 		Fuzzy madFuzzy = new Fuzzy();
 		madFuzzy.RangeMax = 1;
 		madFuzzy.RangeMin = -1;
-		
-		madFuzzy.Inputs.add( new FuzzyInput("Negative", -1, -1));
+		madFuzzy.Inputs = new ArrayList<FuzzyInput>();
+		madFuzzy.Inputs.add( new FuzzyInput("Negative", Double.NEGATIVE_INFINITY, -1));
 		madFuzzy.Inputs.add( new FuzzyInput("Zero", 0, 0));
-		madFuzzy.Inputs.add( new FuzzyInput("Positive", 1, 1));
+		madFuzzy.Inputs.add( new FuzzyInput("Positive", 1, Double.POSITIVE_INFINITY));
 		
 		for (int day = 1; day <= 100; day++) {
 
 			double value = s.GetStockPrice(day);
+			double mad = m.GetMad(day);
+			
+			
 			List<String> values = sf.GetFuzzyValue(value);
-
-			System.out.println("Value: " + value + " for day: " + day);
-			for (String string : values) {
-				System.out.println(string);
-			}
+			List<String> madValues = madFuzzy.GetFuzzyValue(mad);
+			
+			
+			System.out.println("Value: " + value + " and Mad: "+ mad +" for day: " + day);
+//			for (String string : values) {
+//				System.out.print(string);
+//			}
+//			
+//			System.out.print(" - ");
+//			
+//			for (String string : madValues) {
+//				System.out.print(string);
+//			}
+			
+			System.out.println();
 		}
 
 	}

@@ -1,4 +1,5 @@
 import java.lang.Math;
+import java.text.DecimalFormat;
 import java.util.Random;
 
 public class MadGenerator {
@@ -11,7 +12,7 @@ public class MadGenerator {
 		result = .5 * Math.cos(.3 * (double) day) - Math.sin(.3 * (double) day)
 				+ madRandom;
 
-		return result;
+		return Math.round(result);
 	}
 
 	public double MadRandomness(int day) {

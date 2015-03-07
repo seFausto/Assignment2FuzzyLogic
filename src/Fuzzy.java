@@ -11,9 +11,13 @@ public class Fuzzy {
 	{
 		List<String> result = new ArrayList<String>();
 		
+		double subscriptionValue = 0;
+		
 		for (FuzzyInput input : Inputs) {
 			if (input.IsInRange(value))
+			{	
 				result.add(input.Name);
+			}
 		}
 		
 		return result;

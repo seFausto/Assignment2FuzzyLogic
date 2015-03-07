@@ -17,14 +17,17 @@ public class StockGenerator {
 
 	public double StockRandomness(int day) {
 		double result = 0;
-		double randomSign = random.nextDouble() > .5 ? 1 : -1;
+		//Surround in this do, to prevent 0 value stocks
+		do {
+			double randomSign = random.nextDouble() > .5 ? 1 : -1;
 
-		double absoluteRandomNumber = random.nextDouble();
+			double absoluteRandomNumber = random.nextDouble();
 
-		double randomNumber = absoluteRandomNumber * randomSign;
+			double randomNumber = absoluteRandomNumber * randomSign;
 
-		result = 8 * randomNumber * (double) (day % 2);
-
+			result = 8 * randomNumber * (double) (day % 2);
+		} while (result > 0);
+		
 		return result;
 	}
 }
