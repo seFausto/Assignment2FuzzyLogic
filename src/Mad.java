@@ -1,32 +1,27 @@
 import java.lang.Math;
 import java.util.Random;
 
-public class Stock {
-
+public class Mad {
 	private Random random = new Random();
 
-	public double GetStockPrice(int day) {
+	public double GetMad(int day) {
 		double result = 0;
+		double madRandom = 0;
 
-		result = 10 + (2.5 * Math.sin((2 * Math.PI * (double) day) / 19))
-				+ (.8 * Math.cos((2 * Math.PI * (double) day / 5)))
-				+ StockRandomness(day);
+		result = .5 * Math.cos(.3 * (double) day) - Math.sin(.3 * (double) day)
+				+ madRandom;
 
 		return result;
 	}
 
-	public double StockRandomness(int day) {
+	public double MadRandomness(int day) {
 		double result = 0;
 		double randomSign = random.nextDouble() > .5 ? 1 : -1;
 
 		random.setSeed(day);
 		double absoluteRandomNumber = random.nextDouble();
-
-		Logger.Log(absoluteRandomNumber);
-
 		double randomNumber = absoluteRandomNumber * randomSign;
-
-		result = 8 * randomNumber * (double)(day % 2);
+		result = (.2 * randomNumber) * (double) (day % 3);
 
 		return result;
 	}
