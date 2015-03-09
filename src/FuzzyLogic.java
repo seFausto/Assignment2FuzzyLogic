@@ -22,38 +22,53 @@ public class FuzzyLogic {
 		sf.Inputs.add(new FuzzyInput("High", 13, 17));
 		sf.Inputs.add(new FuzzyInput("VeryHigh", 16, Double.MAX_VALUE));
 
-		
 		Fuzzy madFuzzy = new Fuzzy();
 		madFuzzy.RangeMax = 1;
 		madFuzzy.RangeMin = -1;
 		madFuzzy.Inputs = new ArrayList<FuzzyInput>();
-		madFuzzy.Inputs.add( new FuzzyInput("Negative", Double.NEGATIVE_INFINITY, -1));
-		madFuzzy.Inputs.add( new FuzzyInput("Zero", 0, 0));
-		madFuzzy.Inputs.add( new FuzzyInput("Positive", 1, Double.POSITIVE_INFINITY));
-		
-		for (int day = 1; day <= 100; day++) {
+		madFuzzy.Inputs.add(new FuzzyInput("Negative",
+				Double.NEGATIVE_INFINITY, -1));
+		madFuzzy.Inputs.add(new FuzzyInput("Zero", 0, 0));
+		madFuzzy.Inputs.add(new FuzzyInput("Positive", 1,
+				Double.POSITIVE_INFINITY));
 
-			double value = s.GetStockPrice(day);
+		Broker broker = new Broker(1200);
+		double lastStockPrice = 0;
+		for (int day = 1; day <= 150; day++) {
+
+			double stockPrice = s.GetStockPrice(day);
 			double mad = m.GetMad(day);
-			
-			
-			List<String> values = sf.GetFuzzyValue(value);
+
+			List<String> values = sf.GetFuzzyValue(stockPrice);
 			List<String> madValues = madFuzzy.GetFuzzyValue(mad);
-			
-			
-			System.out.println("Value: " + value + " and Mad: "+ mad +" for day: " + day);
-//			for (String string : values) {
-//				System.out.print(string);
-//			}
-//			
-//			System.out.print(" - ");
-//			
-//			for (String string : madValues) {
-//				System.out.print(string);
-//			}
-			
+
+			if (values.size() == 0 || madValues.size() == 0) {
+				System.err.println("No fuzzy outputs were returned. "
+						+ "This is a critical error and should not happen");
+			}
+
+			String actionOutput = FuzzyRule.GetOutput(values.get(0),
+					madValues.get(0));
+
+			System.out.println("Day: " + day);
+
+			System.out.println("Money Before Close: " + broker.Money
+					+ "| Stocks Before Close: " + broker.NumberOfStocks
+					+ "| Value: " + stockPrice + " and Mad: " + mad
+					+ ". Broker should: " + actionOutput);
+
+			broker.TakeAction(actionOutput, stockPrice);
+			System.out.println("Money: " + broker.Money + "| Stocks: "
+					+ broker.NumberOfStocks);
+
 			System.out.println();
+
+			lastStockPrice = stockPrice;
 		}
+
+		// Show Money equivalent
+		System.out.println("TOTAL MONEY: "
+				+ (broker.Money + (broker.NumberOfStocks * lastStockPrice)));
 
 	}
 }
