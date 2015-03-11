@@ -3,10 +3,20 @@ import java.util.List;
 
 public class FuzzyLogic {
 
-	public static void main(String[] args) {
+	private static final String header = "Day, Money, Stocks, Stock Value, Fuzzy Stock, MAD Value, Fuzzy MAD, Fuzzy Output ";
 
+	public static void main(String[] args) {
+		
+		String fileOutput = "";
+		String fileName = null;
 		Logger.TurnLogginOn = true;
 
+		if (args.length > 0)
+		{
+			fileName = args[0];
+		}
+		
+		
 		StockGenerator stockGenerator = new StockGenerator();
 		MadGenerator madGenerator = new MadGenerator();
 
@@ -17,6 +27,8 @@ public class FuzzyLogic {
 		Broker broker = new Broker(1200);
 		double lastStockPrice = 0;
 		
+		System.out.println(header);
+		fileOutput += header + "\n";
 		for (int day = 1; day <= 150; day++) {
 
 			double stockPrice = stockGenerator.GetStockPrice(day);
@@ -33,25 +45,33 @@ public class FuzzyLogic {
 			String actionOutput = FuzzyRule.GetOutput(values.get(0),
 					madValues.get(0));
 
-			System.out.println("Day: " + day);
-
-			System.out.println("Money Before Close: " + broker.Money
-					+ "| Stocks Before Close: " + broker.NumberOfStocks
-					+ "| Value: " + stockPrice + " and Mad: " + mad
-					+ ". Broker should: " + actionOutput);
+			String print = day +"," + broker.Money
+					+ ","+ broker.NumberOfStocks
+					+ "," + stockPrice + ","+ values.get(0)
+					+"," + mad + "," + madValues.get(0)
+					+ "," + actionOutput;
+			System.out.println(print);
+			
+			fileOutput += print + "\n";
 
 			broker.TakeAction(actionOutput, stockPrice);
-			System.out.println("Money: " + broker.Money + "| Stocks: "
-					+ broker.NumberOfStocks);
-
-			System.out.println();
-
-			lastStockPrice = stockPrice;
+		
+					lastStockPrice = stockPrice;
 		}
 
 		// Show Money equivalent
-		System.out.println("TOTAL MONEY: "
-				+ (broker.Money + (broker.NumberOfStocks * lastStockPrice)));
+		String footer = "TOTAL MONEY: "
+				+ (broker.Money + (broker.NumberOfStocks * lastStockPrice));
+		System.out.println(footer);
+		
+		fileOutput += footer;
+
+		
+		if (fileName != null)
+		{
+			File.WriteFile(fileName, fileOutput);
+		}
+		
 
 	}
 
